@@ -1,18 +1,8 @@
-export default function Serie({ nombre, imagen }) {
+export default function Serie({ nombre, imagen, onATF }) {
+
   return (
-    <button
-      /*style={{
-        border: "1px solid #ccc",
-        borderRadius: "10px",
-        padding: "10px",
-        margin: "10px",
-        width: "200px",
-        textAlign: "center",
-        backgroundColor: "#f9f9f9",
-        boxShadow: "0 2px 5px rgba(0,0,0,0.1)"
-      }}*/
-    >
-      <h3 /*style={{ fontSize: "1.1rem", color: "#333" }}*/>{nombre}</h3>
+    <button className="serie" onClick={onATF}>
+      <h3>{nombre}</h3>
       {imagen ? (
         <img
           src={imagen}
@@ -20,7 +10,11 @@ export default function Serie({ nombre, imagen }) {
           style={{ width: "100%", borderRadius: "8px", marginTop: "5px" }}
         />
       ) : (
-        <p style={{ fontStyle: "italic", color: "#666" }}>Sin imagen disponible</p>
+        <img
+          src="https://pngimg.com/uploads/question_mark/question_mark_PNG22.png"
+          alt={nombre}
+          style={{ width: "155px", borderRadius: "8px", marginTop: "5px" }}
+        />
       )}
     </button>
   );
