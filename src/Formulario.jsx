@@ -2,14 +2,22 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Serie from './Serie.jsx'
 
-export default function Formulario({ onAddToFavs }) {
+export default function Formulario({ onAddToFavs, favs }) {
   const [cosas, setCosas] = useState([]);
   const { register, handleSubmit } = useForm();
 
   const onSubmit = async (data) => {
     const response = await fetch(`https://api.tvmaze.com/search/shows?q=${data.busqueda}`);
     const json = await response.json();
-    setCosas(json);
+    
+    // Filtramos los resultados según el género que escogimos en el select
+    const filteredResults = json.filter(item => 
+      item.show.genres && 
+      item.show.genres.includes(data.genero)    // Como hay varios, vale con que incluya solo uno
+    );
+    
+    console.log('Resultados filtrados:', filteredResults);
+    setCosas(filteredResults);
   };
 
   return (
@@ -20,6 +28,13 @@ export default function Formulario({ onAddToFavs }) {
           {...register("busqueda", { required: true })}
           placeholder="Buscar serie..."
         />
+        <select {...register("genero", {required: true})}>
+          <option value="Comedy">Comedy</option>
+          <option value="Drama">Drama</option>
+          <option value="Action">Action</option>
+          <option value="Thriller">Thriller</option>
+          <option value="Science-Fiction">Science Fiction</option>
+        </select>
         <button type="submit">Buscar</button>
       </form>
 
@@ -30,6 +45,7 @@ export default function Formulario({ onAddToFavs }) {
             nombre={item.show.name}
             imagen={item.show.image ? item.show.image.medium : ""}
             onATF={() => onAddToFavs(item)}
+            isFav={favs.some(f => f.id === item.show.id)}
           />
         ))}
       </div>

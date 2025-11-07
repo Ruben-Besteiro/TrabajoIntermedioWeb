@@ -1,7 +1,6 @@
-export default function Serie({ nombre, imagen, onATF }) {
-
+export default function Serie({ nombre, imagen, onATF, isFav }) {
   return (
-    <button className="serie" onClick={onATF}>
+    <button className={`serie ${isFav ? 'fav' : ''}`} onClick={onATF}>
       <h3>{nombre}</h3>
       {imagen ? (
         <img
