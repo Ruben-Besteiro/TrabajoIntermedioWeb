@@ -2,9 +2,10 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Serie from './Serie.jsx'
 
-export default function Formulario({ onToggleFav, favs }) {
+export default function Formulario({ onToggleFav, favs, handleSI, setSM }) {
   const [cosas, setCosas] = useState([]);
   const { register, handleSubmit } = useForm();
+  var a;
 
   // Buscar series
   async function onSubmit(data) {
@@ -18,6 +19,7 @@ export default function Formulario({ onToggleFav, favs }) {
     console.log('Resultados filtrados:', filteredResults);
     setCosas(filteredResults);
   }
+
 
   return (
     <>
@@ -47,17 +49,8 @@ export default function Formulario({ onToggleFav, favs }) {
               nombre={item.show.name}
               imagen={item.show.image ? item.show.image.medium : ""}
               onATF={() => onToggleFav(item)}
-              onInfo={() => alert(`Serie: ${item.show.name}
-Géneros: ${item.show.genres.join(', ')}
-Idioma: ${item.show.language}
-Sitio oficial: ${item.show.officialSite}
-Estrenada: ${item.show.premiered}
-Finalizada: ${item.show.ended}
-Duración: ${item.show.runtime} minutos
-Resumen: ${item.show.summary.replace(/<[^>]+>/g, '')}
-Estado: ${item.show.status}
-Tipo: ${item.show.type}
-`)}
+              onInfo={() => handleSI(item.show)
+              }
               isFav={isFav}
             />
           );

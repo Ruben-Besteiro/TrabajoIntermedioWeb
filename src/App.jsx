@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import Formulario from './Formulario.jsx'
 import Serie from './Serie.jsx'
+import Modal from './Modal.jsx'
 
 export default function App() {
   // Inicializamos los favoritos desde localStorage
@@ -9,6 +10,8 @@ export default function App() {
     return storedFavs ? JSON.parse(storedFavs) : [];
   });
   const [resultados, setResultados] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedSerie, setSelectedSerie] = useState(null);
 
   // Cada vez que cambian los favoritos, se guardan en el localStorage
   useEffect(() => {
@@ -50,6 +53,12 @@ export default function App() {
     setFavs(prev => prev.filter(f => f.id !== item.id));
   }
 
+  // Muestra el modal cuando le damos
+  function handleShowInfo(item) {
+    setSelectedSerie(item);
+    setShowModal(true);
+  }
+
   return (
     <>
       <h1>Trabajo Intermedio de Rubén Besteiro</h1>
@@ -59,6 +68,7 @@ export default function App() {
         favs={favs}
         resultados={resultados}
         setResultados={setResultados}
+        handleSI={handleShowInfo}
       />
 
       <h2>Favoritos</h2>
@@ -68,21 +78,41 @@ export default function App() {
           nombre={item.name}
           imagen={item.image}
           onATF={() => handleRemoveFromFavs(item)}
-          onInfo={() =>
-            alert(`Serie: ${item.name}
-Géneros: ${item.genres.join(', ')}
-Idioma: ${item.language}
-Sitio oficial: ${item.officialSite}
-Estrenada: ${item.premiered}
-Finalizada: ${item.ended}
-Duración: ${item.runtime} minutos
-Resumen: ${item.summary.replace(/<[^>]+>/g, '')}
-Estado: ${item.status}
-Tipo: ${item.type}
-`)}
+          onInfo={() => handleShowInfo(item)}
           isFav={true}
         />
       ))}
+
+      {/* Esto lo tenemos siempre pero solo lo hacemos visible cuando le demos a algo */}
+      <Modal
+        serie={selectedSerie}
+        show={showModal}
+        onClose={() => setShowModal(false)}>
+        {selectedSerie && (
+          <div>
+            <h2>{selectedSerie.name}</h2>
+            {selectedSerie.image && (
+              <img
+                src={
+                  typeof selectedSerie.image === "string"
+                  ? selectedSerie.image
+                  : selectedSerie.image.medium
+                }
+                alt={selectedSerie.name}
+              />
+            )}
+            <p><b>Géneros:</b> {selectedSerie.genres.join(', ')}</p>
+            <p><b>Idioma:</b> {selectedSerie.language}</p>
+            <p><b>Sitio oficial:</b> <a href={selectedSerie.officialSite}>{selectedSerie.officialSite}</a></p>
+            <p><b>Estrenada:</b> {selectedSerie.premiered}</p>
+            <p><b>Finalizada:</b> {selectedSerie.ended}</p>
+            <p><b>Duración:</b> {selectedSerie.runtime} min</p>
+            <p><b>Estado:</b> {selectedSerie.status}</p>
+            <p><b>Tipo:</b> {selectedSerie.type}</p>
+            <p><b>Resumen:</b> {selectedSerie.summary?.replace(/<[^>]+>/g, '')}</p>
+          </div>
+        )}
+      </Modal>
     </>
   );
 }
