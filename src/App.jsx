@@ -31,21 +31,11 @@ export default function App() {
 
     // Pero si no está -> añadir
     const show = item.show || item; // soporte para ambas estructuras
-    const normalizedItem = {
-      id: show.id,
-      name: show.name,
-      image: show.image ? show.image.medium : null,
-      genres: show.genres,
-      language: show.language,
-      officialSite: show.officialSite,
-      premiered: show.premiered,
-      ended: show.ended,
-      runtime: show.runtime,
-      summary: show.summary,
-      status: show.status,
-      type: show.type,
+    const showConBugArreglado = {     // Esto hay que hacerlo porque las imágenes son objetos pero necesitamos pillar solo el link
+      ...show,
+      image: show.image ? show.image.medium || show.image.original : null,
     };
-    setFavs([...favs, normalizedItem]);
+    setFavs([...favs, showConBugArreglado]);
   }
 
   // Quitar de favoritos (desde la lista de favoritos)
@@ -94,16 +84,14 @@ export default function App() {
             {selectedSerie.image && (
               <img
                 src={
-                  typeof selectedSerie.image === "string"
-                  ? selectedSerie.image
-                  : selectedSerie.image.medium
+                  typeof selectedSerie.image === "string" ? selectedSerie.image : selectedSerie.image.medium
                 }
                 alt={selectedSerie.name}
               />
             )}
             <p><b>Géneros:</b> {selectedSerie.genres.join(', ')}</p>
             <p><b>Idioma:</b> {selectedSerie.language}</p>
-            <p><b>Sitio oficial:</b> <a href={selectedSerie.officialSite}>{selectedSerie.officialSite}</a></p>
+            <p><b>Sitio oficial:</b><a href={selectedSerie.officialSite}>{selectedSerie.officialSite}</a></p>
             <p><b>Estrenada:</b> {selectedSerie.premiered}</p>
             <p><b>Finalizada:</b> {selectedSerie.ended}</p>
             <p><b>Duración:</b> {selectedSerie.runtime} min</p>

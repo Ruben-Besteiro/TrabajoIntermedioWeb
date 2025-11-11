@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Serie from './Serie.jsx'
 
-export default function Formulario({ onToggleFav, favs, handleSI, setSM }) {
+export default function Formulario({ onToggleFav, favs, handleSI }) {
   const [cosas, setCosas] = useState([]);
   const { register, handleSubmit } = useForm();
   var a;
